@@ -29,8 +29,5 @@ public:
 	nk_context *ctx;
 
 private:
-    void CreateStyle();
-
-    ImGuiStyle        _style;
     bool              _visible;
 };
