@@ -9,70 +9,6 @@
 #include "../nuklear/nuklear.h"
 #include "../nuklear/nuklear_d3d9.h"
 
-LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-
-	static int mouseX;
-	static int mouseY;
-	
-
-    ImGuiIO& io = ImGui::GetIO();
-    switch(msg) {
-        case WM_LBUTTONDOWN:
-			nk_input_button(Menu::Get().ctx, NK_BUTTON_LEFT, mouseX, mouseY, 1);
-            return true;
-        case WM_LBUTTONUP:
-            nk_input_button(Menu::Get().ctx, NK_BUTTON_LEFT, mouseX, mouseY, 1);
-            return true;
-        case WM_RBUTTONDOWN:
-            io.MouseDown[1] = true;
-            return true;
-        case WM_RBUTTONUP:
-            io.MouseDown[1] = false;
-            return true;
-        case WM_MBUTTONDOWN:
-            io.MouseDown[2] = true;
-            return true;
-        case WM_MBUTTONUP:
-            io.MouseDown[2] = false;
-            return true;
-        case WM_XBUTTONDOWN:
-            if((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON1) == MK_XBUTTON1)
-                io.MouseDown[3] = true;
-            else if((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON2) == MK_XBUTTON2)
-                io.MouseDown[4] = true;
-            return true;
-        case WM_XBUTTONUP:
-            if((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON1) == MK_XBUTTON1)
-                io.MouseDown[3] = false;
-            else if((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON2) == MK_XBUTTON2)
-                io.MouseDown[4] = false;
-            return true;
-        case WM_MOUSEWHEEL:
-            io.MouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
-            return true;
-        case WM_MOUSEMOVE:
-			mouseX = (signed short)(lParam);
-			mouseY = (signed short)(lParam >> 16);
-			nk_input_motion(Menu::Get().ctx, mouseX, mouseY);
-            return true;
-        case WM_KEYDOWN:
-            if(wParam < 256)
-                io.KeysDown[wParam] = 1;
-            return true;
-        case WM_KEYUP:
-            if(wParam < 256)
-                io.KeysDown[wParam] = 0;
-            return true;
-        case WM_CHAR:
-            // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
-            if(wParam > 0 && wParam < 0x10000)
-                io.AddInputCharacter((unsigned short)wParam);
-            return true;
-    }
-    return 0;
-}
-
 InputSys::InputSys()
     : m_hTargetWindow(nullptr), m_ulOldWndProc(0)
 {
@@ -104,10 +40,7 @@ LRESULT __stdcall InputSys::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
     Get().ProcessMessage(msg, wParam, lParam);
 
 	nk_input_begin(Menu::Get().ctx);
-
-    if(Menu::Get().IsVisible() && ImGui_ImplDX9_WndProcHandler(hWnd, msg, wParam, lParam))
-        return true;
-
+	nk_d3d9_handle_event(hWnd, msg, wParam, lParam);    		
 	nk_input_end(Menu::Get().ctx);
 
     return CallWindowProcW((WNDPROC)Get().m_ulOldWndProc, hWnd, msg, wParam, lParam);
