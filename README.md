@@ -1,1 +1,1 @@
-# CSGO-Simple-Nuklear
+# Csgo Simple with Nuklear
