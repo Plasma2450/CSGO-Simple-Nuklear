@@ -57,7 +57,7 @@ void Menu::Initialize()
 
 
 	/* GUI */
-	Menu::ctx = nk_d3d9_init(g_D3DDevice9,screen_w, screen_h);
+	Menu::ctx = nk_d3d9_init(g_D3DDevice9, 1910, 1070);
 	/* Load Fonts: if none of these are loaded a default font will be used  */
 	/* Load Cursor: if you uncomment cursor loading please hide the cursor */
 	{struct nk_font_atlas *atlas;
@@ -85,7 +85,7 @@ void Menu::Initialize()
 
 void Menu::Shutdown()
 {
-    ImGui_ImplDX9_Shutdown();
+	nk_d3d9_shutdown();
     cl_mouseenable->SetValue(true);
 }
 
@@ -130,6 +130,8 @@ void Menu::Render()
 
 
 		nk_d3d9_render(NK_ANTI_ALIASING_ON);
+
+		Sleep(10);
 	}
 
 

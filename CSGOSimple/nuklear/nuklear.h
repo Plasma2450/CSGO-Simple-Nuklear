@@ -17723,7 +17723,7 @@ nk_panel_begin(struct nk_context *ctx, const char *title, enum nk_panel_type pan
             NK_BUTTON_LEFT, header, nk_true);
         if (left_mouse_down && left_mouse_click_in_cursor) {
             win->bounds.x = win->bounds.x + in->mouse.delta.x;
-            win->bounds.y = win->bounds.y + in->mouse.delta.y;
+			win->bounds.y = win->bounds.y + in->mouse.delta.y;
             in->mouse.buttons[NK_BUTTON_LEFT].clicked_pos.x += in->mouse.delta.x;
             in->mouse.buttons[NK_BUTTON_LEFT].clicked_pos.y += in->mouse.delta.y;
             ctx->style.cursor_active = ctx->style.cursors[NK_CURSOR_MOVE];

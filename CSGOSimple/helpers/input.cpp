@@ -40,10 +40,13 @@ LRESULT __stdcall InputSys::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
     Get().ProcessMessage(msg, wParam, lParam);
 
 	nk_input_begin(Menu::Get().ctx);
-	nk_d3d9_handle_event(hWnd, msg, wParam, lParam);    		
+	nk_d3d9_handle_event(hWnd, msg, wParam, lParam);    	
 	nk_input_end(Menu::Get().ctx);
 
-    return CallWindowProcW((WNDPROC)Get().m_ulOldWndProc, hWnd, msg, wParam, lParam);
+	if(!Menu::Get().IsVisible())
+		CallWindowProcW((WNDPROC)Get().m_ulOldWndProc, hWnd, msg, wParam, lParam);
+
+	return true;
 }
 
 bool InputSys::ProcessMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
